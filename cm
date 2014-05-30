@@ -1,0 +1,19 @@
+#!/bin/bash
+# script for cleaning memory
+
+#if usage is more than $usage_limit, clean memoru caches
+#value in bytes
+#good idea is to add it to crontab
+usage_limit=716800
+free_mem=`free | gawk 'NR==2 {print $4}'`;
+if [ $free_mem -lt $usage_limit  ]
+then
+
+sync;
+
+echo 3 > /proc/sys/vm/drop_caches;
+echo "Cleaning";
+logger  "Memory cache dropped";
+fi;
+
+

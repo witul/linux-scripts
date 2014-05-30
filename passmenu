@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#script for pass program to display copy passwords from dmenu
+
+password_files=( "${password_files[@]#"$prefix"/}" )
+password_files=( "${password_files[@]%.gpg}" )
+
+password=$(printf '%s\n' "${password_files[@]}" | dmenu "$@")
+
+
+ [[ -n $password ]] && echo "`pass show $password | grep 'password' | gawk -F \"=\" '{print $2}'`" | `xclip -i -selection c` 2> /dev/null

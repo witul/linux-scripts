@@ -1,0 +1,13 @@
+#!/bin/bash
+#script for mounting ssh via sshfs, using passwords from pass
+item=$1
+path=$2
+mount=$3
+field_decrypted=`pass show $item`
+
+
+host=`echo "$field_decrypted" |grep "host=" | gawk -F "=" '{print $2}'`
+user=`echo "$field_decrypted" |grep "username=" | gawk -F "=" '{print $2}'`
+pass=`echo "$field_decrypted" |grep "password=" | gawk -F "=" '{print $2}'`
+
+url=`echo "$pass" | sshfs $user@$host:/ $mount -o workaround=rename -o password_stdin`
